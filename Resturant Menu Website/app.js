@@ -71,30 +71,69 @@ const menu = [
     img: "./images/item-9.jpeg",
     desc: `skateboard fam synth authentic semiotics. Live-edge lyft af, edison bulb yuccie crucifix microdosing.`,
   },
+  {
+    id: 10,
+    title: "stake dinner",
+    category: "dinner",
+    price: 39.99,
+    img: "./images/item-10.jpeg",
+    desc: `skateboard fam synth authentic semiotics. Live-edge lyft af, edison bulb yuccie crucifix microdosing.`,
+  },
+  {
+    id: 11,
+    title: "cashew nut",
+    category: "snack",
+    price: 12.99,
+    img: "./images/item-10.jpeg",
+    desc: `skateboard fam synth authentic semiotics. Live-edge lyft af, edison bulb yuccie crucifix microdosing.`,
+  },
 ];
 
 // select menu container - .section-center
 const sectionCenter = document.querySelector(".section-center");
-
-const filterBtn = document.querySelectorAll(".filter-btn");
-
+const btnContainer = document.querySelector(".btn-container");
 
 // Load items
-window.addEventListener("DOMContentLoaded", () => displayMenuItems(menu));
+window.addEventListener("DOMContentLoaded", () => {
+  displayMenuItems(menu);
+  dispalyMenuBtn();
+})
 
-// filter btns
-filterBtn.forEach((btn) => {
-  btn.addEventListener("click", (e) => {
-    const category = e.currentTarget.dataset.id;
-    const menuCategory = menu.filter((menuItem) => menuItem.category === category ? menuItem: displayMenuItems(menu));
-    category === "all" ? displayMenuItems(menu) : displayMenuItems(menuCategory);
+// render btns based on categories available
+const dispalyMenuBtn = () => {
+  const categories = menu.reduce((values, item) => {
+    if(!values.includes(item.category)) {
+      values.push(item.category);
+    }
+    return values
+  }, ["all"]);
+  const categoryBtn = categories.map((category) => {
+    return `
+    <button class="filter-btn" type="button" data-id=${category}>
+    ${category}
+    </button>
+    `
+  }).join("");
+
+  // display btns dynamically
+  btnContainer.innerHTML = categoryBtn;
+
+  //selet btns
+  const filterBtn = document.querySelectorAll(".filter-btn");
+  
+  // filter btns
+  filterBtn.forEach((btn) => {
+    btn.addEventListener("click", (e) => {
+      const category = e.currentTarget.dataset.id;
+      const menuCategory = menu.filter((menuItem) => menuItem.category === category ? menuItem : displayMenuItems(menu));
+      category === "all" ? displayMenuItems(menu) : displayMenuItems(menuCategory);
+    });
   });
-});
+}
 
-// dispay Items in array
+// dispay Items in array on DOM
 const displayMenuItems = (menuItems) => {
-  let displayMenu = menuItems.map((item) => {
-    
+  let displayMenu = menuItems.map((item) => {   
     return `
     <article class="menu-item">
       <img src=${item.img} class="photo" alt="menu item">
@@ -108,10 +147,8 @@ const displayMenuItems = (menuItems) => {
       </div>
     </article>
     `
-    
   });
-
   displayMenu = displayMenu.join("");
-  sectionCenter.innerHTML = displayMenu
+  sectionCenter.innerHTML = displayMenu;
 }
 
